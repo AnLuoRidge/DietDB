@@ -107,7 +107,7 @@ DROP TABLE IF EXISTS Dishes_Ingredients CASCADE;
 CREATE TABLE Dishes_Ingredients (
   Dish_ID       int4 NOT NULL, 
   Ingredient_ID int4 NOT NULL, 
-  Amount_g      int4, 
+  Amount_g      int2, 
   PRIMARY KEY (Dish_ID, 
   Ingredient_ID), 
   CONSTRAINT "Positive Amount" 
@@ -245,8 +245,61 @@ INSERT INTO Diets_Meals(Diet_ID, Meal_ID, Meal_Type) VALUES (1, 6, 'Fruits');
 INSERT INTO Diets_Meals(Diet_ID, Meal_ID, Meal_Type) VALUES (1, 7, 'Snacks');
 INSERT INTO Diets_Meals(Diet_ID, Meal_ID, Meal_Type) VALUES (2, 1, 'Snacks');
 
+DROP TABLE IF EXISTS Daily_Intake_References CASCADE;
 
--- TEST PART
+CREATE TABLE Daily_Intake_References (
+  DI_ID           SERIAL NOT NULL, 
+  DI_Name         varchar(255) NOT NULL UNIQUE, 
+  Energy_kc       float4 NOT NULL, 
+  Protein_g       float4 NOT NULL, 
+  Fat_g           float4 NOT NULL, 
+  Carbonhydrate_g float4 NOT NULL, 
+  Sugars_g        float4 NOT NULL, 
+  PRIMARY KEY (DI_ID));
+
+INSERT INTO Daily_Intake_References
+  (DI_Name, 
+  Energy_kc, 
+  Protein_g, 
+  Fat_g, 
+  Carbonhydrate_g, 
+  Sugars_g) 
+VALUES 
+  ('Australian Daily Intake for Average Adult', 
+  2079.35, 
+  50, 
+  70, 
+  310, 
+  90);
+
+INSERT INTO Daily_Intake_References
+  (DI_Name, 
+  Energy_kc, 
+  Protein_g, 
+  Fat_g, 
+  Carbonhydrate_g, 
+  Sugars_g) 
+VALUES 
+  ('Australian Daily Intake for Averaeg Women', 
+  2000, 
+  50, 
+  70, 
+  310, 
+  90);
+
+/*
+Adolescents
+Adults
+Children
+General Nutrition
+National Nutrition Week
+Older Adults
+Physical Activity
+Position Statements
+Sports Nutrition
+*/
+
+-- ***************************** TEST PART *****************************
 --test Category
 
 select a.name Category, b.name Subcategory from categories a, categories b WHERE b.supercategory_id = a.category_id;
