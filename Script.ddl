@@ -27,54 +27,48 @@ INSERT INTO Ingredients_100g(Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g,
 INSERT INTO Ingredients_100g(Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Oranges, raw, all commercial varieties', 85, 1.69, 0.22, 21.15, 16.83);
 INSERT INTO Ingredients_100g(Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Mangos, raw', 60, 0.82, 0.38, 14.98, 13.66);
 
-SELECT * FROM Ingredients_100g;
+DROP TABLE IF EXISTS Food_Categories CASCADE;
 
-
-DROP TABLE IF EXISTS Categories CASCADE;
-
-CREATE TABLE Categories (
+CREATE TABLE Food_Categories (
   Category_ID      SERIAL NOT NULL, 
   Name             varchar(255) NOT NULL UNIQUE, 
   Supercategory_ID int4, 
   PRIMARY KEY (Category_ID)) ;
-ALTER TABLE Categories ADD CONSTRAINT FKCategories981581 FOREIGN KEY (Supercategory_ID) REFERENCES Categories;
+ALTER TABLE Food_Categories ADD CONSTRAINT FKCategories981581 FOREIGN KEY (Supercategory_ID) REFERENCES Food_Categories;
 -- Supercategory_ID int4 REFERENCES Categories, 
 -- 	Category_ID SERIAL NOT NULL PRIMARY KEY, 
 
 
-INSERT INTO Categories(Name) VALUES ('Protein');
-INSERT INTO Categories(Name) VALUES ('Vegetables');
-INSERT INTO Categories(Name) VALUES ('Fruits');
-INSERT INTO Categories(Name) VALUES ('Grains');
-INSERT INTO Categories(Name) VALUES ('Diary');
-INSERT INTO Categories(Name) VALUES ('Oil');
-INSERT INTO Categories(Name, Supercategory_ID) VALUES ('Seafood', 1);
-INSERT INTO Categories(Name, Supercategory_ID) VALUES ('Meats', 1);
-INSERT INTO Categories(Name, Supercategory_ID) VALUES ('Nuts', 1);
-INSERT INTO Categories(Name, Supercategory_ID) VALUES ('Dark Green', 2);
+INSERT INTO Food_Categories(Name) VALUES ('Protein');
+INSERT INTO Food_Categories(Name) VALUES ('Vegetables');
+INSERT INTO Food_Categories(Name) VALUES ('Fruits');
+INSERT INTO Food_Categories(Name) VALUES ('Grains');
+INSERT INTO Food_Categories(Name) VALUES ('Diary');
+INSERT INTO Food_Categories(Name) VALUES ('Oil');
+INSERT INTO Food_Categories(Name, Supercategory_ID) VALUES ('Seafood', 1);
+INSERT INTO Food_Categories(Name, Supercategory_ID) VALUES ('Meats', 1);
+INSERT INTO Food_Categories(Name, Supercategory_ID) VALUES ('Nuts', 1);
+INSERT INTO Food_Categories(Name, Supercategory_ID) VALUES ('Dark Green', 2);
 
-DROP TABLE IF EXISTS Ingredients_Categories CASCADE;
+DROP TABLE IF EXISTS Ingredients_Food_Categories CASCADE;
 
-CREATE TABLE Ingredients_Categories (
+CREATE TABLE Ingredients_Food_Categories (
   Ingredient_ID int4 NOT NULL REFERENCES Ingredients_100g, 
-  Category_ID   int4 NOT NULL REFERENCES Categories, 
+  Category_ID   int4 NOT NULL REFERENCES Food_Categories, 
   PRIMARY KEY (Ingredient_ID, 
   Category_ID)
   );
 
-INSERT INTO Ingredients_Categories
-  (Ingredient_ID, 
-  Category_ID) 
-VALUES 
-  (1, 
-  1);
-
-INSERT INTO Ingredients_Categories
-  (Ingredient_ID, 
-  Category_ID) 
-VALUES 
-  (1, 
-  1);
+INSERT INTO Ingredients_Food_Categories(Ingredient_ID, Category_ID) VALUES (2, 1);
+INSERT INTO Ingredients_Food_Categories(Ingredient_ID, Category_ID) VALUES (2, 7);
+INSERT INTO Ingredients_Food_Categories(Ingredient_ID, Category_ID) VALUES (7, 10);
+INSERT INTO Ingredients_Food_Categories(Ingredient_ID, Category_ID) VALUES (7, 2);
+INSERT INTO Ingredients_Food_Categories(Ingredient_ID, Category_ID) VALUES (1, 1);
+INSERT INTO Ingredients_Food_Categories(Ingredient_ID, Category_ID) VALUES (3, 1);
+INSERT INTO Ingredients_Food_Categories(Ingredient_ID, Category_ID) VALUES (3, 8);
+INSERT INTO Ingredients_Food_Categories(Ingredient_ID, Category_ID) VALUES (4, 4);
+INSERT INTO Ingredients_Food_Categories(Ingredient_ID, Category_ID) VALUES (5, 3);
+INSERT INTO Ingredients_Food_Categories(Ingredient_ID, Category_ID) VALUES (7, 3);
 
 DROP TABLE IF EXISTS Dishes CASCADE;
 
@@ -92,8 +86,8 @@ INSERT INTO Dishes (Dish_Name) VALUES ('Dish Grain 1');
 INSERT INTO Dishes (Dish_Name) VALUES ('Dish Grain 2');
 INSERT INTO Dishes (Dish_Name) VALUES ('Dish Fruit 1');
 INSERT INTO Dishes (Dish_Name) VALUES ('Dish Fruit 2');
-
-
+INSERT INTO Dishes (Dish_Name) VALUES ('Dish Snack 1');
+INSERT INTO Dishes (Dish_Name) VALUES ('Dish Snack 2');
 /*
 INSERT INTO Dishes (Dish_Name) VALUES ('Mango Teriyaki Salmon');
 INSERT INTO Dishes (Dish_Name) VALUES ('Cajun Chicken With Sweet Potato Wedges And Avocado Salad');
@@ -115,15 +109,16 @@ CREATE TABLE Dishes_Ingredients (
 ALTER TABLE Dishes_Ingredients ADD CONSTRAINT FKDishes_Ing873133 FOREIGN KEY (Ingredient_ID) REFERENCES Ingredients_100g (Ingredient_ID);
 ALTER TABLE Dishes_Ingredients ADD CONSTRAINT FKDishes_Ing227351 FOREIGN KEY (Dish_ID) REFERENCES Dishes (Dish_ID);
 
-INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (1, 2, 60);
-INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (1, 7, 60);
+INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (1, 2, 210);
+INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (1, 7, 85);
 INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (2, 3, 60);
-INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (3, 5, 60);
-INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (3, 2, 60);
-INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (3, 1, 60);
-INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (4, 7, 60);
-INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (5, 7, 60);
-INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (6, 5, 60);
+INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (3, 5, 160);
+INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (3, 2, 5);
+INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (3, 1, 10);
+INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (4, 7, 200);
+INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (5, 6, 20);
+INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (6, 5, 30);
+INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (6, 7, 160);
 
 DROP TABLE IF EXISTS Meals CASCADE;
 
@@ -299,15 +294,18 @@ Position Statements
 Sports Nutrition
 */
 
--- ***************************** TEST PART *****************************
---test Category
+--  ***************************** SHOW DATA *****************************
+SELECT * FROM Ingredients_100g;
+SELECT * FROM Dishes;
 
-select a.name Category, b.name Subcategory from categories a, categories b WHERE b.supercategory_id = a.category_id;
+-- Food Category
 
---view dishes in meals
+select a.name Category, b.name Subcategory from Food_Categories a, Food_Categories b WHERE b.supercategory_id = a.category_id;
+
+-- Dishes in meals
 select meals.meal_id, dishes.dish_name from meals_dishes join meals on meals_dishes.meal_id = meals.meal_id join dishes on meals_dishes.dish_id = dishes.dish_id;
 
---view diets
+-- Diets
 
 select diet_type, diet_id, meal_type, Dish_Name from diets natural join diets_meals natural join meals natural join meals_dishes natural join dishes
 order by diet_id, 
@@ -318,3 +316,14 @@ order by diet_id,
     when 'Fruits' then 4
     when 'Snacks' then 5
     end;
+
+ -- Daily Intake References
+ select * from daily_intake_references;
+-- Dish Energy List
+ select dish_id, sum(energy_kc) as energy from dishes_ingredients natural join ingredients_100g group by dish_id order by dish_id;
+ -- Meal Energy List
+ select meal_id, sum(energy_kc) as energy from meals_dishes natural join dishes_ingredients natural join ingredients_100g group by meal_id order by meal_id;
+ -- Diet Energy List
+ select diet_id, sum(energy_kc) as energy from diets_meals natural join meals_dishes natural join dishes_ingredients natural join ingredients_100g GROUP BY diet_id order by diet_id;
+-- Seafood
+select dish_name, food_categories.name from dishes natural join dishes_ingredients natural join ingredients_food_categories natural join food_categories where name = 'Seafood';
