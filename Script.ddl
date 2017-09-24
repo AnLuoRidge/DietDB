@@ -118,7 +118,11 @@ INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (3, 1, 1
 INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (4, 7, 200);
 INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (5, 6, 20);
 INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (6, 5, 30);
-INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (6, 7, 160);
+INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (6, 7, 45);
+INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (7, 7, 77);
+INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (8, 7, 60);
+INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (9, 7, 30);
+INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (10, 7, 10);
 
 DROP TABLE IF EXISTS Meals CASCADE;
 
@@ -191,13 +195,13 @@ VALUES
   5);
 INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (3, 1);
 INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (3, 2);
-INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (4, 2);
+INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (4, 10);
 INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (5, 4);
 INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (5, 5);
 INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (5, 6);
-INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (6, 6);
-INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (7, 5);
-INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (8, 5);
+INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (6, 9);
+INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (7, 8);
+INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (8, 7);
 INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (9, 5);
 INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (10, 1);
 
@@ -294,6 +298,19 @@ Position Statements
 Sports Nutrition
 */
 
+-- Diet_Details (View)
+
+CREATE VIEW Diet_Details AS
+select diet_type, diet_id, meal_id, meal_type, dish_id, dish_name, ingredient_id, ingredients_100g.name, amount_g, energy_kc, protein_g, fat_g, carbonhydrate_g, sugars_g from diets natural join diets_meals natural join meals_dishes natural join dishes natural join dishes_ingredients natural join ingredients_100g order by diet_id, meal_id, dish_id;
+
+CREATE VIEW Meal_Details AS
+select meal_id, dish_id, dish_name, ingredient_id, ingredients_100g.name, amount_g, energy_kc, protein_g, fat_g, carbonhydrate_g, sugars_g from meals_dishes natural join dishes natural join dishes_ingredients natural join ingredients_100g order by meal_id;
+
+DROP VIEW IF EXISTS Dish_Details;
+
+CREATE VIEW Dish_Details AS
+select dish_id, dish_name, ingredient_id, ingredients_100g.name, amount_g, energy_kc, protein_g, fat_g, carbonhydrate_g, sugars_g from dishes natural join dishes_ingredients natural join ingredients_100g order by dish_id;
+
 --  ***************************** SHOW DATA *****************************
 SELECT * FROM Ingredients_100g;
 SELECT * FROM Dishes;
@@ -317,7 +334,7 @@ order by diet_id,
     when 'Snacks' then 5
     end;
 
- -- Daily Intake References
+-- Daily Intake References
  select * from daily_intake_references;
 -- Dish Energy List
  select dish_id, sum(energy_kc) as energy from dishes_ingredients natural join ingredients_100g group by dish_id order by dish_id;
@@ -327,3 +344,18 @@ order by diet_id,
  select diet_id, sum(energy_kc) as energy from diets_meals natural join meals_dishes natural join dishes_ingredients natural join ingredients_100g GROUP BY diet_id order by diet_id;
 -- Seafood
 select dish_name, food_categories.name from dishes natural join dishes_ingredients natural join ingredients_food_categories natural join food_categories where name = 'Seafood';
+-- High energy diet searching
+select diet_id, sum(energy_kc) as energy from diets_meals natural join meals_dishes natural join dishes_ingredients natural join ingredients_100g GROUP BY diet_id having sum(energy_kc) > (select energy_kc from daily_intake_references where di_id = 1);
+
+-- Join view and categories
+select * from Dish_details natural join Ingredients_Food_Categories a join Food_Categories b on a.category_id = b.category_id where b.name = 'Seafood';
+
+/* Data Source
+Diets
+FULL [Sample meal plan for men | Eat For Health](https://www.eatforhealth.gov.au/food-essentials/how-much-do-we-need-each-day/sample-meal-plan-men)
+[DASH饮食法，USNEWS 综合排名第一的饮食法 - Thinlong的文章 - 知乎专栏](https://www.evernote.com/shard/s36/nl/3952316/180192f0-cd81-4874-8301-cf84ca86805e/)
+[What A Healthy (And Achievable) 7 Day Meal Plan Looks Like](http://www.huffingtonpost.com.au/2016/12/12/what-a-healthy-and-achievable-7-day-meal-plan-looks-like_a_21626472/)
+
+ref [Healthy Weight-Loss & Diet Recipes - EatingWell](http://www.eatingwell.com/recipes/18045/weight-loss-diet/)
+[Healthy recipes | BBC Good Food](https://www.bbcgoodfood.com/recipes/category/healthy)
+*/
