@@ -56,8 +56,8 @@ DROP TABLE IF EXISTS Food_Categories CASCADE;
 CREATE TABLE Food_Categories (
   Category_ID      SERIAL NOT NULL PRIMARY KEY, 
   Name             varchar(255) NOT NULL UNIQUE, 
-  Supercategory_ID int4 REFERENCES Categories);
--- Supercategory_ID int4 REFERENCES Categories, 
+  Supercategory_ID int4 REFERENCES Food_Categories);
+-- Supercategory_ID int4 REFERENCES Food_Categories, 
 -- 	Category_ID SERIAL NOT NULL PRIMARY KEY, 
 
 INSERT INTO Food_Categories(Name) VALUES ('Protein');
