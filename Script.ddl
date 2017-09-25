@@ -2,7 +2,7 @@
 drop schema public cascade;
 create schema public;
 
-DROP TABLE IF EXISTS Ingredients_100g CASCADE;
+DROP TABLE Ingredients_100g CASCADE; -- IF EXISTS
 
 CREATE TABLE Ingredients_100g (
   Ingredient_ID   SERIAL NOT NULL, 
@@ -51,7 +51,7 @@ INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbo
 INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Tuna, fresh, bluefin, cooked, dry heat', 184, 29.91, 6.28, 0, 0);
 -- INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('', , , , , );
 
-DROP TABLE IF EXISTS Food_Categories CASCADE;
+DROP TABLE Food_Categories CASCADE;
 
 CREATE TABLE Food_Categories (
   Category_ID      SERIAL NOT NULL PRIMARY KEY, 
@@ -71,7 +71,7 @@ INSERT INTO Food_Categories(Name, Supercategory_ID) VALUES ('Meats', 1);
 INSERT INTO Food_Categories(Name, Supercategory_ID) VALUES ('Nuts', 1);
 INSERT INTO Food_Categories(Name, Supercategory_ID) VALUES ('Dark Green', 2);
 
-DROP TABLE IF EXISTS Ingredients_Food_Categories CASCADE;
+DROP TABLE Ingredients_Food_Categories CASCADE;
 
 CREATE TABLE Ingredients_Food_Categories (
   Ingredient_ID int4 NOT NULL REFERENCES Ingredients_100g, 
@@ -91,7 +91,7 @@ INSERT INTO Ingredients_Food_Categories(Ingredient_ID, Category_ID) VALUES (4, 4
 INSERT INTO Ingredients_Food_Categories(Ingredient_ID, Category_ID) VALUES (5, 3);
 INSERT INTO Ingredients_Food_Categories(Ingredient_ID, Category_ID) VALUES (7, 3);
 
-DROP TABLE IF EXISTS Dishes CASCADE;
+DROP TABLE Dishes CASCADE;
 
 CREATE TABLE Dishes (
   Dish_ID SERIAL NOT NULL, 
@@ -116,7 +116,7 @@ INSERT INTO Dishes (Dish_Name) VALUES ('Dish Snack 2');
 
 
 
-DROP TABLE IF EXISTS Dishes_Ingredients CASCADE;
+DROP TABLE Dishes_Ingredients CASCADE;
 
 CREATE TABLE Dishes_Ingredients (
   Dish_ID       int4 NOT NULL, 
@@ -144,7 +144,7 @@ INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (8, 7, 6
 INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (9, 7, 30);
 INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (10, 7, 10);
 
-DROP TABLE IF EXISTS Meals CASCADE;
+DROP TABLE Meals CASCADE;
 
 CREATE TABLE Meals (
   Meal_ID SERIAL NOT NULL,
@@ -170,7 +170,7 @@ FOR i IN 1..7 LOOP
 END LOOP;
 end
 */
-DROP TABLE IF EXISTS Meals_Dishes CASCADE;
+DROP TABLE Meals_Dishes CASCADE;
 
 CREATE TABLE Meals_Dishes (
   Meal_ID int4 NOT NULL, 
@@ -225,7 +225,7 @@ INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (8, 7);
 INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (9, 5);
 INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (10, 1);
 
-DROP TABLE IF EXISTS Diets CASCADE;
+DROP TABLE Diets CASCADE;
 
 CREATE TABLE Diets (
   Diet_ID SERIAL NOT NULL, 
@@ -246,7 +246,7 @@ VALUES
   ('Normal');
 -- Mediterranean
 
-DROP TABLE IF EXISTS Diets_Meals CASCADE;
+DROP TABLE Diets_Meals CASCADE;
 
 CREATE TABLE Diets_Meals (
   Diet_ID   int4 NOT NULL, 
@@ -264,7 +264,7 @@ INSERT INTO Diets_Meals(Diet_ID, Meal_ID, Meal_Type) VALUES (1, 6, 'Fruits');
 INSERT INTO Diets_Meals(Diet_ID, Meal_ID, Meal_Type) VALUES (1, 7, 'Snacks');
 INSERT INTO Diets_Meals(Diet_ID, Meal_ID, Meal_Type) VALUES (2, 1, 'Snacks');
 
-DROP TABLE IF EXISTS Daily_Intake_References CASCADE;
+DROP TABLE Daily_Intake_References CASCADE;
 
 CREATE TABLE Daily_Intake_References (
   DI_ID           SERIAL NOT NULL, 
@@ -326,17 +326,17 @@ Sports Nutrition
 
 -- Diet_Details (View)
 
-DROP VIEW IF EXISTS Diet_Details;
+DROP VIEW Diet_Details;
 
 CREATE VIEW Diet_Details AS
 select diet_type, diet_id, meal_id, meal_type, dish_id, dish_name, ingredient_id, Ingredient_Name, amount_g, energy_kc, protein_g, fat_g, carbonhydrate_g, sugars_g from diets natural join diets_meals natural join meals_dishes natural join dishes natural join dishes_ingredients natural join ingredients_100g order by diet_id, meal_id, dish_id;
 
-DROP VIEW IF EXISTS Meal_Details;
+DROP VIEW Meal_Details;
 
 CREATE VIEW Meal_Details AS
 select meal_id, dish_id, dish_name, ingredient_id, Ingredient_Name, amount_g, energy_kc, protein_g, fat_g, carbonhydrate_g, sugars_g from meals_dishes natural join dishes natural join dishes_ingredients natural join ingredients_100g order by meal_id;
 
-DROP VIEW IF EXISTS Dish_Details;
+DROP VIEW Dish_Details;
 
 CREATE VIEW Dish_Details AS
 select dish_id, dish_name, ingredient_id, Ingredient_Name, amount_g, energy_kc, protein_g, fat_g, carbonhydrate_g, sugars_g from dishes natural join dishes_ingredients natural join ingredients_100g order by dish_id;
@@ -348,7 +348,7 @@ select * from meals;
 
 -- Food Category
 
-select a.name Category, b.name Subcategory from Food_Categories a, Food_Categories b WHERE b.supercategory_id = a.category_id;
+select a.name as Category, b.name as Subcategory from Food_Categories a, Food_Categories b WHERE b.supercategory_id = a.category_id;
 
 -- Dishes in meals
 select meals.meal_id, dish_name from meals_dishes join meals on meals_dishes.meal_id = meals.meal_id join dishes on meals_dishes.dish_id = dishes.dish_id;
