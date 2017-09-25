@@ -46,8 +46,10 @@ INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbo
 INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Lamb, Australian, imported, fresh, separable fat, raw', 648, 6.27, 68.87, 0, 0);
 INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Pasta, fresh-refrigerated, plain, cooked', 131, 5.15, 1.05, 24.93, 0);
 INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Kidney, all types, mature seeds, raw', 333, 23.58, 0.83, 60.01, 2.23);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('', , , , , );
-
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Sweet potato, raw, unprepared', 86, 1.57, 0.05, 20.12, 4.18);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Lemons, raw, without peel', 29, 1.1, 0.3, 9.32, 2.5);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Tuna, fresh, bluefin, cooked, dry heat', 184, 29.91, 6.28, 0, 0);
+-- INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('', , , , , );
 
 DROP TABLE IF EXISTS Food_Categories CASCADE;
 
@@ -96,8 +98,12 @@ CREATE TABLE Dishes (
   Dish_Name    varchar(255) NOT NULL UNIQUE, 
   PRIMARY KEY (Dish_ID));
 
-
-INSERT INTO Dishes (Dish_Name) VALUES ('Dish 1');
+INSERT INTO Dishes (Dish_Name) VALUES ('Mango Teriyaki Salmon');
+INSERT INTO Dishes (Dish_Name) VALUES ('Cajun Chicken With Sweet Potato Wedges And Avocado Salad');
+INSERT INTO Dishes (Dish_Name) VALUES ('Greek Lemon Pasta And Tuna Salad');
+INSERT INTO Dishes (Dish_Name) VALUES ('Boiled Brown Rice');
+INSERT INTO Dishes (Dish_Name) VALUES ('Avocados, Apples');
+INSERT INTO Dishes (Dish_Name) VALUES ('Wholegrain toast with polyunsaturated margarine');
 INSERT INTO Dishes (Dish_Name) VALUES ('Dish 2');
 INSERT INTO Dishes (Dish_Name) VALUES ('Dish 3');
 INSERT INTO Dishes (Dish_Name) VALUES ('Dish 4');
@@ -107,14 +113,9 @@ INSERT INTO Dishes (Dish_Name) VALUES ('Dish Fruit 1');
 INSERT INTO Dishes (Dish_Name) VALUES ('Dish Fruit 2');
 INSERT INTO Dishes (Dish_Name) VALUES ('Dish Snack 1');
 INSERT INTO Dishes (Dish_Name) VALUES ('Dish Snack 2');
-/*
-INSERT INTO Dishes (Dish_Name) VALUES ('Mango Teriyaki Salmon');
-INSERT INTO Dishes (Dish_Name) VALUES ('Cajun Chicken With Sweet Potato Wedges And Avocado Salad');
-INSERT INTO Dishes (Dish_Name) VALUES ('Greek Lemon Pasta And Tuna Salad');
-INSERT INTO Dishes (Dish_Name) VALUES ('Angel Hair Spaghetti With Pesto And Prawns');
-INSERT INTO Dishes (Dish_Name) VALUES ('Steamed Brown Rice');
-INSERT INTO Dishes (Dish_Name) VALUES ('Avocado, Apple');
-*/
+
+
+
 DROP TABLE IF EXISTS Dishes_Ingredients CASCADE;
 
 CREATE TABLE Dishes_Ingredients (
