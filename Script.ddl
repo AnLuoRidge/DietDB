@@ -10,15 +10,15 @@ CREATE TABLE Ingredients_100g (
   Ingredient_ID   SERIAL NOT NULL PRIMARY KEY, 
   Ingredient_Name            varchar(255) NOT NULL UNIQUE, 
   Energy_kc       float4 NOT NULL CHECK (Energy_kc >= 0), 
-  Energy_pct      int2 CHECK (Energy_pct >= 0 AND Energy_pct <= 100),
+  Energy_pct      int2 CHECK (Energy_pct >= 0),
   Protein_g       float4 CHECK (Protein_g >= 0), 
-  Protein_pct     int2 CHECK (Protein_pct >= 0 AND Protein_pct <= 100),
+  Protein_pct     int2 CHECK (Protein_pct >= 0), --  AND Protein_pct <= 100
   Fat_g           float4 CHECK (Fat_g >= 0), 
-  Fat_pct         int2 CHECK (Fat_pct > 0 AND Fat_pct <= 100),
+  Fat_pct         int2 CHECK (Fat_pct >= 0),
   Carbonhydrate_g float4 CHECK (Carbonhydrate_g >= 0), 
-  Carbonhydrate_pct int2 CHECK (Carbonhydrate_pct >= 0 AND Carbonhydrate_pct <= 100), 
+  Carbonhydrate_pct int2 CHECK (Carbonhydrate_pct >= 0), 
   Sugars_g        float4 CHECK (Sugars_g >= 0),
-  Sugars_pct      int2 CHECK (Sugars_pct >= 0 AND Sugars_pct <= 100),
+  Sugars_pct      int2 CHECK (Sugars_pct >= 0),
   DI_ID int4 REFERENCES Daily_Intake_References);
 --     , CONSTRAINT "Positive Energy" 
 --     CHECK (Energy_kC >= 0),
@@ -59,27 +59,32 @@ INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbo
 INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Tuna, fresh, bluefin, cooked, dry heat', 184, 29.91, 6.28, 0, 0, 1);
 -- INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('', , , , , );
 
-UPDATE Ingredients_100g SET Energy_pct = 100 * (Energy_kc / (SELECT DISTINCT di.Energy_kC FROM Daily_Intake_References as di, Ingredients_100g as b WHERE di.DI_ID = b.DI_ID));
+UPDATE Ingredients_100g SET Energy_pct = 100 * (Energy_kc / (SELECT DISTINCT di.Energy_kC FROM Daily_Intake_References as di, Ingredients_100g as b WHERE di.DI_ID = b.DI_ID)), 
+Fat_pct = 100 * (Fat_g / (SELECT DISTINCT di.fat_g FROM Daily_Intake_References as di where di.DI_ID = 1)),
+Protein_pct = 100 * (Protein_g / (SELECT DISTINCT di.Protein_g FROM Daily_Intake_References as di, Ingredients_100g as b WHERE di.DI_ID = b.DI_ID)),
+Carbonhydrate_pct = 100 * (Carbonhydrate_g / (SELECT DISTINCT di.Carbonhydrate_g FROM Daily_Intake_References as di, Ingredients_100g as b WHERE di.DI_ID = b.DI_ID)),
+Sugars_pct = 100 * (Sugars_g / (SELECT DISTINCT di.Sugars_g FROM Daily_Intake_References as di, Ingredients_100g as b WHERE di.DI_ID = b.DI_ID));
+
 
 DROP TABLE Food_Categories CASCADE;
 
 CREATE TABLE Food_Categories (
   Category_ID      SERIAL NOT NULL PRIMARY KEY, 
-  Name             varchar(255) NOT NULL UNIQUE, 
+  Category_Name    varchar(255) NOT NULL UNIQUE, 
   Supercategory_ID int4 REFERENCES Food_Categories);
 -- Supercategory_ID int4 REFERENCES Food_Categories, 
 -- 	Category_ID SERIAL NOT NULL PRIMARY KEY, 
 
-INSERT INTO Food_Categories(Name) VALUES ('Protein');
-INSERT INTO Food_Categories(Name) VALUES ('Vegetables');
-INSERT INTO Food_Categories(Name) VALUES ('Fruits');
-INSERT INTO Food_Categories(Name) VALUES ('Grains');
-INSERT INTO Food_Categories(Name) VALUES ('Diary');
-INSERT INTO Food_Categories(Name) VALUES ('Oil');
-INSERT INTO Food_Categories(Name, Supercategory_ID) VALUES ('Seafood', 1);
-INSERT INTO Food_Categories(Name, Supercategory_ID) VALUES ('Meats', 1);
-INSERT INTO Food_Categories(Name, Supercategory_ID) VALUES ('Nuts', 1);
-INSERT INTO Food_Categories(Name, Supercategory_ID) VALUES ('Dark Green', 2);
+INSERT INTO Food_Categories(Category_Name) VALUES ('Protein');
+INSERT INTO Food_Categories(Category_Name) VALUES ('Vegetables');
+INSERT INTO Food_Categories(Category_Name) VALUES ('Fruits');
+INSERT INTO Food_Categories(Category_Name) VALUES ('Grains');
+INSERT INTO Food_Categories(Category_Name) VALUES ('Diary');
+INSERT INTO Food_Categories(Category_Name) VALUES ('Oil');
+INSERT INTO Food_Categories(Category_Name, Supercategory_ID) VALUES ('Seafood', 1);
+INSERT INTO Food_Categories(Category_Name, Supercategory_ID) VALUES ('Meats', 1);
+INSERT INTO Food_Categories(Category_Name, Supercategory_ID) VALUES ('Nuts', 1);
+INSERT INTO Food_Categories(Category_Name, Supercategory_ID) VALUES ('Dark Green', 2);
 
 DROP TABLE Ingredients_Food_Categories CASCADE;
 
@@ -113,7 +118,7 @@ INSERT INTO Dishes (Dish_Name) VALUES ('Greek Lemon Pasta And Tuna Salad');
 INSERT INTO Dishes (Dish_Name) VALUES ('Boiled Brown Rice');
 INSERT INTO Dishes (Dish_Name) VALUES ('Avocados, Apples');
 INSERT INTO Dishes (Dish_Name) VALUES ('Wholegrain toast with polyunsaturated margarine');
-INSERT INTO Dishes (Dish_Name) VALUES ('Dish 2');
+INSERT INTO Dishes (Dish_Name) VALUES ('Steak');
 INSERT INTO Dishes (Dish_Name) VALUES ('Dish 3');
 INSERT INTO Dishes (Dish_Name) VALUES ('Dish 4');
 INSERT INTO Dishes (Dish_Name) VALUES ('Dish Grain 1');
@@ -146,7 +151,7 @@ INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (4, 7, 2
 INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (5, 6, 20);
 INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (6, 5, 30);
 INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (6, 7, 45);
-INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (7, 7, 77);
+INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (7, 3, 100);
 INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (8, 7, 60);
 INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (9, 7, 30);
 INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (10, 7, 10);
@@ -227,13 +232,12 @@ DROP TABLE Diets CASCADE;
 
 CREATE TABLE Diets (
   Diet_ID SERIAL NOT NULL, 
-  Diet_Type varchar(255), 
+  Diet_Type varchar(255) CHECK (Diet_Type in ('Normal', 'Vegetarian', 'Carnivorous', 'DASH', 'Mediterranean'), 
   PRIMARY KEY (Diet_ID));
 
 INSERT INTO Diets (Diet_Type) VALUES ('Normal');
 INSERT INTO Diets (Diet_Type) VALUES ('Vegetarian');
-INSERT INTO Diets (Diet_Type) VALUES ('Normal');
--- Mediterranean
+INSERT INTO Diets (Diet_Type) VALUES ('Carnivorous');
 
 DROP TABLE Diets_Meals CASCADE;
 
@@ -258,7 +262,7 @@ DROP TABLE Daily_Intake_References CASCADE;
 CREATE TABLE Daily_Intake_References (
   DI_ID           SERIAL NOT NULL, 
   DI_Name         varchar(255) NOT NULL UNIQUE, 
-  Gender          varchar(255) CHECK (Gender in ('Female', 'Male'), 
+  Gender          varchar(255) CHECK (Gender in ('Female', 'Male')), 
   Age_Min          int2 CHECK (Age_Min >= 0 AND Age_Min <= 100), 
   Age_Max          int2 CHECK (Age_Max >= 0 AND Age_Max <= 100), 
   Energy_kc       float4 NOT NULL CHECK (Energy_kc >= 0), 
@@ -268,8 +272,8 @@ CREATE TABLE Daily_Intake_References (
   Sugars_g        float4 NOT NULL CHECK (Sugars_g >= 0), 
   PRIMARY KEY (DI_ID));
 
-INSERT INTO Daily_Intake_References  (DI_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Australian Daily Intake for Average Adult', 2079.35, 50, 70, 310, 90);
-INSERT INTO Daily_Intake_References(DI_Name,Gender, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Australian Daily Intake for Average Women', 'Female',2000, 50, 70, 310, 90);
+INSERT INTO Daily_Intake_References (DI_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Australian Daily Intake for Average Adult', 2079.35, 50, 70, 310, 90);
+INSERT INTO Daily_Intake_References (DI_Name,Gender, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Australian Daily Intake for Average Women', 'Female',2000, 50, 70, 310, 90);
 
 /*
 Adolescents
@@ -284,6 +288,8 @@ Sports Nutrition
 */
 
 -- Diet_Details (View)
+
+--  ***************************** CREATE VIEWS *****************************
 
 DROP VIEW Diet_Details;
 
@@ -307,7 +313,7 @@ select * from meals;
 
 -- Food Category
 
-select a.name as Category, b.name as Subcategory from Food_Categories a, Food_Categories b WHERE b.supercategory_id = a.category_id;
+select a.Category_name as Category, b.Category_name as Subcategory from Food_Categories a, Food_Categories b WHERE b.supercategory_id = a.category_id;
 
 -- Dishes in meals
 select meals.meal_id, dish_name from meals_dishes join meals on meals_dishes.meal_id = meals.meal_id join dishes on meals_dishes.dish_id = dishes.dish_id;
@@ -327,18 +333,18 @@ order by diet_id,
 -- Daily Intake References
  select * from daily_intake_references;
 -- Dish Energy List
- select dish_id, sum(energy_kc) as energy from dishes_ingredients natural join ingredients_100g group by dish_id order by dish_id;
+ select * from dishes natural join (select dish_id, sum(energy_kc) as energy from dishes_ingredients natural join ingredients_100g group by dish_id order by dish_id) AS foo;
  -- Meal Energy List
  select meal_id, sum(energy_kc) as energy from meals_dishes natural join dishes_ingredients natural join ingredients_100g group by meal_id order by meal_id;
  -- Diet Energy List
  select diet_id, sum(energy_kc) as energy from diets_meals natural join meals_dishes natural join dishes_ingredients natural join ingredients_100g GROUP BY diet_id order by diet_id;
 -- Seafood
-select dish_name, food_categories.name from dishes natural join dishes_ingredients natural join ingredients_food_categories natural join food_categories where name = 'Seafood';
+select dish_name, food_categories.Category_name as "Contains" from dishes natural join dishes_ingredients natural join ingredients_food_categories natural join food_categories where Category_name = 'Seafood';
 -- High energy diet searching
 select diet_id, sum(energy_kc) as energy from diets_meals natural join meals_dishes natural join dishes_ingredients natural join ingredients_100g GROUP BY diet_id having sum(energy_kc) > (select energy_kc from daily_intake_references where di_id = 1);
 
 -- Join view and categories
-select * from Dish_details natural join Ingredients_Food_Categories a join Food_Categories b on a.category_id = b.category_id where b.name = 'Seafood';
+select * from Dish_details natural join Ingredients_Food_Categories a join Food_Categories b on a.category_id = b.category_id where b.Category_name = 'Seafood';
 
 /* Data Source
 Diets
