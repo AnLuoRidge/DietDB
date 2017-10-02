@@ -1,3 +1,5 @@
+-- Introduction
+
 -- Reset
 drop schema public cascade;
 create schema public;
@@ -5,51 +7,59 @@ create schema public;
 DROP TABLE Ingredients_100g CASCADE; -- IF EXISTS
 
 CREATE TABLE Ingredients_100g (
-  Ingredient_ID   SERIAL NOT NULL, 
+  Ingredient_ID   SERIAL NOT NULL PRIMARY KEY, 
   Ingredient_Name            varchar(255) NOT NULL UNIQUE, 
   Energy_kc       float4 NOT NULL, 
-  Protein_g       float4, 
-  Fat_g           float4, 
-  Carbonhydrate_g float4, 
-  Sugars_g        float4, 
-  PRIMARY KEY (Ingredient_ID), 
-    CONSTRAINT "Positive Energy" 
-    CHECK (Energy_kC >= 0));
-  CONSTRAINT "Positive Protein" 
-    CHECK (Protein_g >= 0), 
-  CONSTRAINT "Positive Fat" 
-    CHECK (Fat_g >= 0));
-  CONSTRAINT "Positive Carbonhydrate" 
-    CHECK (Carbonhydrate_g >= 0));
-  CONSTRAINT "Positive Sugars" 
-    CHECK (Sugars_g >= 0));
+  Energy_pct      int2 CHECK (Energy_pct >= 0),
+  Protein_g       float4 CHECK (Protein_g >= 0), 
+  Protein_pct     int2 CHECK (Protein_pct >= 0),
+  Fat_g           float4 CHECK (Fat_g >= 0), 
+  Fat_pct         int2 CHECK (Fat_pct > 0),
+  Carbonhydrate_g float4 CHECK (Carbonhydrate_g >= 0), 
+  Carbonhydrate_pct int2 CHECK (Carbonhydrate_pct >= 0), 
+  Sugars_g        float4 CHECK (Sugars_g >= 0),
+  Sugars_pct      int2 CHECK (Sugars_pct >= 0),
+  DI_ID int4 REFERENCES Daily_Intake_References
+--     , CONSTRAINT "Positive Energy" 
+--     CHECK (Energy_kC >= 0),
+--   CONSTRAINT "Positive Protein" 
+--     CHECK (Protein_g >= 0), 
+--   CONSTRAINT "Positive Fat" 
+--     CHECK (Fat_g >= 0),
+--   CONSTRAINT "Positive Carbonhydrate" 
+--     CHECK (Carbonhydrate_g >= 0),
+--   CONSTRAINT "Positive Sugars" 
+--     CHECK (Sugars_g >= 0)
+);
 
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Egg', 143, 12.56, 9.51, 0.72, 0.37);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Salmon, Atlantic, wild, raw', 142, 19.84, 6.34, 0, 0);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Beef, Australian, imported, grass-fed, seam fat, raw', 562, 9.58, 57.73, 1.06, 0);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Brown Rice', 160, 3, 1.5, 33, 0);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Avocados, raw, all commercial varieties', 240, 3, 21.99, 12.79, 0.99);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Oranges, raw, all commercial varieties', 85, 1.69, 0.22, 21.15, 16.83);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Mangos, raw', 60, 0.82, 0.38, 14.98, 13.66);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Margarine, regular, hard, soybean (hydrogenated)', 719, 0.9, 80.5, 10.9, 0.0);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Bread, multi-grain, toasted (includes whole-grain)', 288, 14.52, 4.6, 47.11, 6.94);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Chickpeas', 364, 19, 6, 61, 11);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Tomatoes, red, ripe, raw, year round average', 18, 0.88, 0.2, 3.89, 2.63);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Apples, raw, with skin', 52, 0.26, 0.17, 13.81, 10.39);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Caffe Latte, Skinny w. skim milk, no added sugar', 128, 12.8, 0.4, 18.4, 18.4);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Cheese, cheddar', 404, 20.87, 33.31, 3.09, 0.48);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Trail mix, regular, unsalted', 462, 13。8, 29.4, 44.9, 0);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Olive', 884, 0, 100, 0, 0);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Potatoes, flesh and skin, raw', 77, 2.05, 0.09, 17.49, 0.82);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Carrots, raw', 41, 0.93, 0.24, 9.58, 4.74);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Broccoli, raw', 34, 2.82, 0.37, 6.64, 1.7);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Lamb, Australian, imported, fresh, separable fat, raw', 648, 6.27, 68.87, 0, 0);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Pasta, fresh-refrigerated, plain, cooked', 131, 5.15, 1.05, 24.93, 0);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Kidney, all types, mature seeds, raw', 333, 23.58, 0.83, 60.01, 2.23);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Sweet potato, raw, unprepared', 86, 1.57, 0.05, 20.12, 4.18);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Lemons, raw, without peel', 29, 1.1, 0.3, 9.32, 2.5);
-INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Tuna, fresh, bluefin, cooked, dry heat', 184, 29.91, 6.28, 0, 0);
--- INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('', , , , , );
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Egg', 143, 12.56, 9.51, 0.72, 0.37, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Salmon, Atlantic, wild, raw', 142, 19.84, 6.34, 0, 0, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Beef, Australian, imported, grass-fed, seam fat, raw', 562, 9.58, 57.73, 1.06, 0, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Brown Rice', 160, 3, 1.5, 33, 0, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Avocados, raw, all commercial varieties', 240, 3, 21.99, 12.79, 0.99, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Oranges, raw, all commercial varieties', 85, 1.69, 0.22, 21.15, 16.83, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Mangos, raw', 60, 0.82, 0.38, 14.98, 13.66, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Margarine, regular, hard, soybean (hydrogenated)', 719, 0.9, 80.5, 10.9, 0.0, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Bread, multi-grain, toasted (includes whole-grain)', 288, 14.52, 4.6, 47.11, 6.94, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Chickpeas', 364, 19, 6, 61, 11, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Tomatoes, red, ripe, raw, year round average', 18, 0.88, 0.2, 3.89, 2.63, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Apples, raw, with skin', 52, 0.26, 0.17, 13.81, 10.39, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Caffe Latte, Skinny w. skim milk, no added sugar', 128, 12.8, 0.4, 18.4, 18.4, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Cheese, cheddar', 404, 20.87, 33.31, 3.09, 0.48, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Trail mix, regular, unsalted', 462, 13。8, 29.4, 44.9, 0, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Olive', 884, 0, 100, 0, 0, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Potatoes, flesh and skin, raw', 77, 2.05, 0.09, 17.49, 0.82, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Carrots, raw', 41, 0.93, 0.24, 9.58, 4.74, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Broccoli, raw', 34, 2.82, 0.37, 6.64, 1.7, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Lamb, Australian, imported, fresh, separable fat, raw', 648, 6.27, 68.87, 0, 0, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Pasta, fresh-refrigerated, plain, cooked', 131, 5.15, 1.05, 24.93, 0, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Kidney, all types, mature seeds, raw', 333, 23.58, 0.83, 60.01, 2.23, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Sweet potato, raw, unprepared', 86, 1.57, 0.05, 20.12, 4.18, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Lemons, raw, without peel', 29, 1.1, 0.3, 9.32, 2.5, 1);
+INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Tuna, fresh, bluefin, cooked, dry heat', 184, 29.91, 6.28, 0, 0, 1);
+-- INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('', , , , , );
+
+UPDATE Ingredients_100g SET Energy_pct = 100 * (Energy_kc / (SELECT DISTINCT di.Energy_kC FROM Daily_Intake_References as di, Ingredients_100g as b WHERE di.DI_ID = b.DI_ID));
 
 DROP TABLE Food_Categories CASCADE;
 
