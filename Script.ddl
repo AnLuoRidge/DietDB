@@ -9,17 +9,17 @@ DROP TABLE Ingredients_100g CASCADE; -- IF EXISTS
 CREATE TABLE Ingredients_100g (
   Ingredient_ID   SERIAL NOT NULL PRIMARY KEY, 
   Ingredient_Name            varchar(255) NOT NULL UNIQUE, 
-  Energy_kc       float4 NOT NULL, 
-  Energy_pct      int2 CHECK (Energy_pct >= 0),
+  Energy_kc       float4 NOT NULL CHECK (Energy_kc >= 0), 
+  Energy_pct      int2 CHECK (Energy_pct >= 0 AND Energy_pct <= 100),
   Protein_g       float4 CHECK (Protein_g >= 0), 
-  Protein_pct     int2 CHECK (Protein_pct >= 0),
+  Protein_pct     int2 CHECK (Protein_pct >= 0 AND Protein_pct <= 100),
   Fat_g           float4 CHECK (Fat_g >= 0), 
-  Fat_pct         int2 CHECK (Fat_pct > 0),
+  Fat_pct         int2 CHECK (Fat_pct > 0 AND Fat_pct <= 100),
   Carbonhydrate_g float4 CHECK (Carbonhydrate_g >= 0), 
-  Carbonhydrate_pct int2 CHECK (Carbonhydrate_pct >= 0), 
+  Carbonhydrate_pct int2 CHECK (Carbonhydrate_pct >= 0 AND Carbonhydrate_pct <= 100), 
   Sugars_g        float4 CHECK (Sugars_g >= 0),
-  Sugars_pct      int2 CHECK (Sugars_pct >= 0),
-  DI_ID int4 REFERENCES Daily_Intake_References
+  Sugars_pct      int2 CHECK (Sugars_pct >= 0 AND Sugars_pct <= 100),
+  DI_ID int4 REFERENCES Daily_Intake_References);
 --     , CONSTRAINT "Positive Energy" 
 --     CHECK (Energy_kC >= 0),
 --   CONSTRAINT "Positive Protein" 
@@ -30,7 +30,7 @@ CREATE TABLE Ingredients_100g (
 --     CHECK (Carbonhydrate_g >= 0),
 --   CONSTRAINT "Positive Sugars" 
 --     CHECK (Sugars_g >= 0)
-);
+
 
 INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Egg', 143, 12.56, 9.51, 0.72, 0.37, 1);
 INSERT INTO Ingredients_100g(Ingredient_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g, DI_ID) VALUES ('Salmon, Atlantic, wild, raw', 142, 19.84, 6.34, 0, 0, 1);
@@ -86,8 +86,7 @@ DROP TABLE Ingredients_Food_Categories CASCADE;
 CREATE TABLE Ingredients_Food_Categories (
   Ingredient_ID int4 NOT NULL REFERENCES Ingredients_100g, 
   Category_ID   int4 NOT NULL REFERENCES Food_Categories, 
-  PRIMARY KEY (Ingredient_ID, 
-  Category_ID)
+  PRIMARY KEY (Ingredient_ID, Category_ID)
   );
 
 INSERT INTO Ingredients_Food_Categories(Ingredient_ID, Category_ID) VALUES (2, 1);
@@ -129,15 +128,13 @@ INSERT INTO Dishes (Dish_Name) VALUES ('Dish Snack 2');
 DROP TABLE Dishes_Ingredients CASCADE;
 
 CREATE TABLE Dishes_Ingredients (
-  Dish_ID       int4 NOT NULL, 
-  Ingredient_ID int4 NOT NULL, 
-  Amount_g      int2, 
+  Dish_ID       int4 NOT NULL REFERENCES Dishes, 
+  Ingredient_ID int4 NOT NULL REFERENCES Ingredients_100g, 
+  Amount_g      int2 CHECK (Amount_g > 0), 
   PRIMARY KEY (Dish_ID, 
-  Ingredient_ID), 
-  CONSTRAINT "Positive Amount" 
-    CHECK (Amount_g > 0));
-ALTER TABLE Dishes_Ingredients ADD CONSTRAINT FKDishes_Ing873133 FOREIGN KEY (Ingredient_ID) REFERENCES Ingredients_100g (Ingredient_ID);
-ALTER TABLE Dishes_Ingredients ADD CONSTRAINT FKDishes_Ing227351 FOREIGN KEY (Dish_ID) REFERENCES Dishes (Dish_ID);
+  Ingredient_ID));
+-- ALTER TABLE Dishes_Ingredients ADD CONSTRAINT FKDishes_Ing873133 FOREIGN KEY (Ingredient_ID) REFERENCES Ingredients_100g (Ingredient_ID);
+-- ALTER TABLE Dishes_Ingredients ADD CONSTRAINT FKDishes_Ing227351 FOREIGN KEY (Dish_ID) REFERENCES Dishes (Dish_ID);
 
 INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (1, 2, 210);
 INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (1, 7, 85);
@@ -157,29 +154,27 @@ INSERT INTO Dishes_Ingredients(Dish_ID, Ingredient_ID, Amount_g) VALUES (10, 7, 
 DROP TABLE Meals CASCADE;
 
 CREATE TABLE Meals (
-  Meal_ID SERIAL NOT NULL,
-  PRIMARY KEY (Meal_ID));
+  Meal_ID SERIAL NOT NULL PRIMARY KEY,
+  Dish_Num int2 CHECK (Dish_Num > 0)
+  );
 
-INSERT INTO Meals (Meal_ID) VALUES (nextval('meals_meal_id_seq'));
-INSERT INTO Meals (Meal_ID) VALUES (nextval('meals_meal_id_seq'));
-INSERT INTO Meals (Meal_ID) VALUES (nextval('meals_meal_id_seq'));
-INSERT INTO Meals (Meal_ID) VALUES (nextval('meals_meal_id_seq'));
-INSERT INTO Meals (Meal_ID) VALUES (nextval('meals_meal_id_seq'));
-INSERT INTO Meals (Meal_ID) VALUES (nextval('meals_meal_id_seq'));
-INSERT INTO Meals (Meal_ID) VALUES (nextval('meals_meal_id_seq'));
-INSERT INTO Meals (Meal_ID) VALUES (nextval('meals_meal_id_seq'));
-INSERT INTO Meals (Meal_ID) VALUES (nextval('meals_meal_id_seq'));
-INSERT INTO Meals (Meal_ID) VALUES (nextval('meals_meal_id_seq'));
-INSERT INTO Meals (Meal_ID) VALUES (nextval('meals_meal_id_seq'));
-INSERT INTO Meals (Meal_ID) VALUES (nextval('meals_meal_id_seq'));
-/*
-begin
-FOR i IN 1..7 LOOP
-  INSERT INTO Meals (Meal_ID) VALUES (nextval('meals_meal_id_seq'));
-    RAISE NOTICE 'i IS %', i;
-END LOOP;
-end
-*/
+INSERT INTO Meals (Dish_Num) VALUES (2);
+INSERT INTO Meals (Dish_Num) VALUES (2);
+INSERT INTO Meals (Dish_Num) VALUES (2);
+INSERT INTO Meals (Dish_Num) VALUES (2);
+INSERT INTO Meals (Dish_Num) VALUES (2);
+INSERT INTO Meals (Dish_Num) VALUES (2);
+INSERT INTO Meals (Dish_Num) VALUES (2);
+INSERT INTO Meals (Dish_Num) VALUES (2);
+INSERT INTO Meals (Dish_Num) VALUES (2);
+INSERT INTO Meals (Dish_Num) VALUES (2);
+INSERT INTO Meals (Dish_Num) VALUES (2);
+INSERT INTO Meals (Dish_Num) VALUES (2);
+INSERT INTO Meals (Dish_Num) VALUES (2);
+INSERT INTO Meals (Dish_Num) VALUES (2);
+
+-- INSERT INTO Meals (Meal_ID) VALUES (nextval('meals_meal_id_seq'));
+
 DROP TABLE Meals_Dishes CASCADE;
 
 CREATE TABLE Meals_Dishes (
@@ -190,39 +185,11 @@ CREATE TABLE Meals_Dishes (
 ALTER TABLE Meals_Dishes ADD CONSTRAINT FKMeals_Dish364667 FOREIGN KEY (Dish_ID) REFERENCES Dishes (Dish_ID);
 ALTER TABLE Meals_Dishes ADD CONSTRAINT FKMeals_Dish694481 FOREIGN KEY (Meal_ID) REFERENCES Meals (Meal_ID);
 
-INSERT INTO Meals_Dishes
-  (Meal_ID, 
-  Dish_ID) 
-VALUES 
-  (1, 
-  1);
-
-INSERT INTO Meals_Dishes
-  (Meal_ID, 
-  Dish_ID) 
-VALUES 
-  (1, 
-  2);
-
-INSERT INTO Meals_Dishes
-  (Meal_ID, 
-  Dish_ID) 
-VALUES 
-  (1, 
-  3);
-
-INSERT INTO Meals_Dishes
-  (Meal_ID, 
-  Dish_ID) 
-VALUES 
-  (2,
-  4);
-INSERT INTO Meals_Dishes
-  (Meal_ID, 
-  Dish_ID) 
-VALUES 
-  (2, 
-  5);
+INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (1, 1);
+INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (1, 2);
+INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (1, 3);
+INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (2, 4);
+INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (2, 5);
 INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (3, 1);
 INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (3, 2);
 INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (4, 10);
@@ -234,6 +201,27 @@ INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (7, 8);
 INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (8, 7);
 INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (9, 5);
 INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (10, 1);
+INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (11, 1);
+INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (12, 1);
+INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (13, 1);
+INSERT INTO Meals_Dishes (Meal_ID, Dish_ID) VALUES (14, 1);
+
+-- wihtout plpgsql permission, cannot use loop
+UPDATE Meals set Dish_Num = (SELECT count(*) from Meals_Dishes WHERE Meal_ID = 1) WHERE Meal_ID = 1;
+UPDATE Meals set Dish_Num = (SELECT count(*) from Meals_Dishes WHERE Meal_ID = 2) WHERE Meal_ID = 2;
+UPDATE Meals set Dish_Num = (SELECT count(*) from Meals_Dishes WHERE Meal_ID = 3) WHERE Meal_ID = 3;
+UPDATE Meals set Dish_Num = (SELECT count(*) from Meals_Dishes WHERE Meal_ID = 4) WHERE Meal_ID = 4;
+UPDATE Meals set Dish_Num = (SELECT count(*) from Meals_Dishes WHERE Meal_ID = 5) WHERE Meal_ID = 5;
+UPDATE Meals set Dish_Num = (SELECT count(*) from Meals_Dishes WHERE Meal_ID = 6) WHERE Meal_ID = 6;
+UPDATE Meals set Dish_Num = (SELECT count(*) from Meals_Dishes WHERE Meal_ID = 7) WHERE Meal_ID = 7;
+UPDATE Meals set Dish_Num = (SELECT count(*) from Meals_Dishes WHERE Meal_ID = 8) WHERE Meal_ID = 8;
+UPDATE Meals set Dish_Num = (SELECT count(*) from Meals_Dishes WHERE Meal_ID = 9) WHERE Meal_ID = 9;
+UPDATE Meals set Dish_Num = (SELECT count(*) from Meals_Dishes WHERE Meal_ID = 10) WHERE Meal_ID = 10;
+UPDATE Meals set Dish_Num = (SELECT count(*) from Meals_Dishes WHERE Meal_ID = 11) WHERE Meal_ID = 11;
+UPDATE Meals set Dish_Num = (SELECT count(*) from Meals_Dishes WHERE Meal_ID = 12) WHERE Meal_ID = 12;
+UPDATE Meals set Dish_Num = (SELECT count(*) from Meals_Dishes WHERE Meal_ID = 13) WHERE Meal_ID = 13;
+UPDATE Meals set Dish_Num = (SELECT count(*) from Meals_Dishes WHERE Meal_ID = 14) WHERE Meal_ID = 14;
+
 
 DROP TABLE Diets CASCADE;
 
@@ -242,18 +230,9 @@ CREATE TABLE Diets (
   Diet_Type varchar(255), 
   PRIMARY KEY (Diet_ID));
 
-INSERT INTO Diets
-  (Diet_Type) 
-VALUES 
-  ('Normal');
-INSERT INTO Diets
-  (Diet_Type) 
-VALUES 
-  ('Vegetarian');
-INSERT INTO Diets
-  (Diet_Type) 
-VALUES 
-  ('Normal');
+INSERT INTO Diets (Diet_Type) VALUES ('Normal');
+INSERT INTO Diets (Diet_Type) VALUES ('Vegetarian');
+INSERT INTO Diets (Diet_Type) VALUES ('Normal');
 -- Mediterranean
 
 DROP TABLE Diets_Meals CASCADE;
@@ -261,7 +240,7 @@ DROP TABLE Diets_Meals CASCADE;
 CREATE TABLE Diets_Meals (
   Diet_ID   int4 NOT NULL, 
   Meal_ID   int4 NOT NULL, 
-  Meal_Type varchar(255) NOT NULL, 
+  Meal_Type varchar(255) NOT NULL CHECK (meal_type in ('Breakfast', 'Dinner', 'Lunch', 'Snacks', 'Fruits')), 
   PRIMARY KEY (Diet_ID, 
   Meal_ID));
 ALTER TABLE Diets_Meals ADD CONSTRAINT FKDiets_Meal997521 FOREIGN KEY (Meal_ID) REFERENCES Meals (Meal_ID);
@@ -279,48 +258,18 @@ DROP TABLE Daily_Intake_References CASCADE;
 CREATE TABLE Daily_Intake_References (
   DI_ID           SERIAL NOT NULL, 
   DI_Name         varchar(255) NOT NULL UNIQUE, 
-  Gender          varchar(255), 
-  Age_Min          int2, 
-  Age_Max          int2, 
-  Energy_kc       float4 NOT NULL, 
-  Protein_g       float4 NOT NULL, 
-  Fat_g           float4 NOT NULL, 
-  Carbonhydrate_g float4 NOT NULL, 
-  Sugars_g        float4 NOT NULL, 
+  Gender          varchar(255) CHECK (Gender in ('Female', 'Male'), 
+  Age_Min          int2 CHECK (Age_Min >= 0 AND Age_Min <= 100), 
+  Age_Max          int2 CHECK (Age_Max >= 0 AND Age_Max <= 100), 
+  Energy_kc       float4 NOT NULL CHECK (Energy_kc >= 0), 
+  Protein_g       float4 NOT NULL CHECK (Protein_g >= 0), 
+  Fat_g           float4 NOT NULL CHECK (Fat_g >= 0), 
+  Carbonhydrate_g float4 NOT NULL CHECK (Carbonhydrate_g >= 0), 
+  Sugars_g        float4 NOT NULL CHECK (Sugars_g >= 0), 
   PRIMARY KEY (DI_ID));
 
-
-INSERT INTO Daily_Intake_References
-  (DI_Name, 
-  Energy_kc, 
-  Protein_g, 
-  Fat_g, 
-  Carbonhydrate_g, 
-  Sugars_g) 
-VALUES 
-  ('Australian Daily Intake for Average Adult', 
-  2079.35, 
-  50, 
-  70, 
-  310, 
-  90);
-
-INSERT INTO Daily_Intake_References
-  (DI_Name,
-  Gender, 
-  Energy_kc, 
-  Protein_g, 
-  Fat_g, 
-  Carbonhydrate_g, 
-  Sugars_g) 
-VALUES 
-  ('Australian Daily Intake for Average Women', 
-  'Female',
-  2000, 
-  50, 
-  70, 
-  310, 
-  90);
+INSERT INTO Daily_Intake_References  (DI_Name, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Australian Daily Intake for Average Adult', 2079.35, 50, 70, 310, 90);
+INSERT INTO Daily_Intake_References(DI_Name,Gender, Energy_kc, Protein_g, Fat_g, Carbonhydrate_g, Sugars_g) VALUES ('Australian Daily Intake for Average Women', 'Female',2000, 50, 70, 310, 90);
 
 /*
 Adolescents
@@ -352,7 +301,7 @@ CREATE VIEW Dish_Details AS
 select dish_id, dish_name, ingredient_id, Ingredient_Name, amount_g, energy_kc, protein_g, fat_g, carbonhydrate_g, sugars_g from dishes natural join dishes_ingredients natural join ingredients_100g order by dish_id;
 
 --  ***************************** SHOW DATA *****************************
-SELECT * FROM Ingredients_100g;
+SELECT ingredient_id, ingredient_name, energy_kc, energy_pct, protein_g, protein_pct FROM Ingredients_100g;
 SELECT * FROM Dishes;
 select * from meals;
 
@@ -408,3 +357,4 @@ DI [Daily Intake Guide: Healthy eating, made easy. Front-of-pack labelling for f
 Diff Groups[Australian Dietary Guidelines: Recommended daily intakes | Nutrition Australia](http://www.nutritionaustralia.org/national/resource/australian-dietary-guidelines-recommended-daily-intakes)
 [Nutrition guidelines | Australian Healthy Food Guide](http://www.healthyfoodguide.com.au/resources/nutrition-guidelines)
 */
+
